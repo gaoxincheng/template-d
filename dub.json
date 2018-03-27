@@ -1,0 +1,11 @@
+{
+	"name": "template-d",
+	"authors": [
+		"gaoxinchen"
+	],
+	"mainSourceFile": "./source/app.d",
+	"description": "A minimal D application.",
+	"copyright": "Copyright © 2018, gaoxinchen",
+	"license": "BSD",
+	"targetType": "executable"
+}
