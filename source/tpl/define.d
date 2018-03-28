@@ -1,7 +1,12 @@
 module tpl.define;
 
 import std.regex;
+import std.exception;
 import tpl.match;
+
+void inja_throw(string type, string message) {
+	throw new Exception("[inja.exception." ~ type ~ "] " ~ message);
+}
 
 enum  Type {
 		Comment,

@@ -19,19 +19,21 @@ void main()
 			{{x}}
 			{% endfor %}";
 
-	auto mall = RegexObj.match!(Delimiter)("{{x}}",regex_map_delimiters);
-	writeln("type : ",mall.type);
-	foreach (c; mall.match)
-	{
-		writeln(c.hit);
-		writeln(c[1]);
-		writeln(c.empty);
-		writeln(c.whichPattern);
-	}
+	// auto mall = RegexObj.match!(Delimiter)("{{x}}",regex_map_delimiters);
+	// writeln("type : ",mall.type);
+	// foreach (c; mall.match)
+	// {
+	// 	writeln(c.hit);
+	// 	writeln(c[1]);
+	// 	writeln(c.empty);
+	// 	writeln(c.whichPattern);
+	// }
 
    writeln("-------------search first----------------");
 
-	auto matRs = RegexObj.search_all("haha {% if({{var}}) %}");
+	string test = "gxc {% for x in xarray %} make {{x}} flag {% endfor %} hello";
+	auto matRs = RegexObj.search_all(test);
+	writeln("pattern : ",matRs.pattern);
 	writeln("empty : ",matRs.empty);
 	writeln("size : ",matRs.size);
 	writeln("position  : ",matRs.position);
@@ -43,6 +45,9 @@ void main()
 	writeln("whichPattern :",matRs.match.front.whichPattern);
 
 	writeln("-------------next first----------------");
+	auto  loop_match = RegexObj.search_closed(test, matRs.pattern(), regex_map_statement_openers[Statement.Loop], regex_map_statement_closers[Statement.Loop], matRs);
+	writeln("inner :",loop_match.inner());
+	writeln("outer :",loop_match.outer());
 	// foreach (c; matRs.match)
 	// {
 	// 	//writeln("type : ",matRs.type);
