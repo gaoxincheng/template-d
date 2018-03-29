@@ -4,6 +4,7 @@ import std.string;
 import std.file;
 import std.path;
 import std.conv;
+import std.stdio;
 
 import tpl.define;
 import tpl.element;
@@ -43,7 +44,8 @@ public:
 		// 	result.command = match_callback.type().first;
 		// 	return result;
 		// }
-
+        if(input.length <= 0)
+            return new  ElementExpression(Function.ReadJson);
 		auto match_function = RegexObj.match!Function(input, regex_map_functions);
 		switch ( match_function.type() ) {
 			case Function.ReadJson: {
@@ -52,7 +54,7 @@ public:
 				ElementExpression result =new  ElementExpression(Function.ReadJson);
 				switch (element_notation) {
 					case ElementNotation.Pointer: {
-						if (command[0] != '/') { command = "/"~command; }
+						//if (command[0] != '/') { command = "/"~command; }
 						result.command = command;
 						break;
 					}
@@ -84,8 +86,10 @@ public:
 
 		size_t current_position = 0;
 		auto match_delimiter = RegexObj.search_all(input,current_position);
+        //writeln("-----3------");
 		while (match_delimiter.found()) {
-			//current_position = match_delimiter.end_position();
+			current_position = match_delimiter.end_position();
+            //writeln("---whole --- :",match_delimiter.str());
 			string string_prefix = match_delimiter.prefix();
 			if (!string_prefix.empty()) {
 				result ~= new ElementString(string_prefix);
@@ -158,10 +162,12 @@ public:
 								if (!match_command.found()) {
 									inja_throw("parser_error", "unknown if statement: " ~ else_match._open_match.str());
 								}
+                                //writeln("################### :",match_command.str(1),"   else match inner : ",else_match_inner);
 								condition_container.children ~= new ElementConditionBranch(else_match.inner(), match_command.type(), parse_expression(match_command.str(1)));
 							}
 
 							MatchClosed last_if_match = RegexObj.search_closed(input, match_delimiter.pattern(), regex_map_statement_openers[Statement.Condition], regex_map_statement_closers[Statement.Condition], condition_match);
+                           //MatchClosed last_if_match = RegexObj.search_closed_on_level(input, match_delimiter.pattern(), regex_map_statement_openers[Statement.Condition], regex_map_statement_closers[Statement.Condition], regex_map_statement_closers[Statement.Condition], condition_match);
 							if (!last_if_match.found()) {
 								inja_throw("parser_error", "misordered if statement");
 							}
@@ -172,8 +178,10 @@ public:
 								inja_throw("parser_error", "unknown if statement: " ~ last_if_match._open_match.str());
 							}
 							if (match_command.type() == Condition.Else) {
+                                //writeln("################### 1:",last_if_match.inner());
 								condition_container.children ~= new ElementConditionBranch(last_if_match.inner(), match_command.type()) ;
 							} else {
+                                 //writeln("################### 2:",match_command.str(1));
 								condition_container.children ~= new ElementConditionBranch(last_if_match.inner(), match_command.type(), parse_expression(match_command.str(1)));
 							}
 
@@ -211,6 +219,7 @@ public:
 			}
 
 			match_delimiter = RegexObj.search_all(input, current_position);
+            //writeln("-----4------: ",current_position);
 		}
 		if (current_position < input.length) {
 			result ~= new ElementString(input[current_position..$]);
@@ -221,6 +230,7 @@ public:
 
 	Element parse_tree(Element current_element, string path) {
 		if (current_element.inner.length > 0) {
+            writeln("-----parse_level ------ : ",current_element.inner);
 			current_element.children = parse_level(current_element.inner, path);
 			current_element.inner = string.init;
 		}
@@ -228,7 +238,9 @@ public:
 		if (current_element.children.length > 0) {
             for(size_t i=0;i<current_element.children.length;i++)
             {
-                current_element.children[i] = parse_tree(current_element.children[i],path);
+                 //writeln("-----2------");
+                auto em = current_element.children[i];
+                current_element.children[i] = parse_tree(em,path);
             }
 		}
 		return current_element;

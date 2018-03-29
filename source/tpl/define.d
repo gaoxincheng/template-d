@@ -2,6 +2,8 @@ module tpl.define;
 
 import std.regex;
 import std.exception;
+import std.string;
+
 import tpl.match;
 
 void inja_throw(string type, string message) {
@@ -9,16 +11,16 @@ void inja_throw(string type, string message) {
 }
 
 enum  Type {
-		Comment,
-		Condition,
-		ConditionBranch,
-		Expression,
-		Loop,
-		Main,
-		String
-	}
+	Comment,
+	Condition,
+	ConditionBranch,
+	Expression,
+	Loop,
+	Main,
+	String
+}
 
-enum  Delimiter : uint {
+enum  Delimiter {
 	Comment,
 	Expression,
 	LineStatement,
@@ -66,7 +68,7 @@ enum  Function {
 enum  Condition {
 	If,
 	ElseIf,
-	Else
+	Else 
 }
 
 enum  Loop {

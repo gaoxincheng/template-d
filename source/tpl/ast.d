@@ -6,7 +6,7 @@ class ASTNode {
 public:
 	Element parsed_node;
 
-	this(ref Element parsed_template)  { 
+	this(Element parsed_template)  { 
         parsed_node = parsed_template; 
     }
 };

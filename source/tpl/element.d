@@ -2,6 +2,7 @@ module tpl.element;
 
 import std.string;
 import std.variant;
+import std.json;
 import tpl.define;
 
 class Element {
@@ -40,7 +41,7 @@ class ElementExpression:  Element {
     Function func;
     ElementExpression[] args;
     string command;
-    Variant result;
+    JSONValue result;
 
     this() { 
         super(Type.Expression);
@@ -84,6 +85,7 @@ class ElementConditionBranch:  Element {
     this(const string inner,  const Condition m_condition_type) {
         super(Type.ConditionBranch,inner);
         condition_type = m_condition_type;
+        condition = new ElementExpression();
     }
     this(const string inner, const Condition m_condition_type, ElementExpression m_condition) {
         super(Type.ConditionBranch,inner);

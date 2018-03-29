@@ -4,6 +4,7 @@ import std.regex;
 import std.string;
 import std.traits;
 import std.stdio;
+import std.conv;
 
 import tpl.define;
 
@@ -76,10 +77,11 @@ public:
 	@property size_t size() { return _allm.front.length; }
 
 	override string str(int i= 0)  { 
-		if(i > _allm.front.length)
+		if(i >= _allm.front.length)
 			return string.init;
 		return _allm.front[i]; 
 	}
+
 
 	override string prefix()
 	{
@@ -99,7 +101,10 @@ class MatchClosed {
 public:
 	Match _open_match, _close_match;
 
-	this() { }
+	this() { 
+		_open_match = new Match();
+		_close_match = new Match();
+	}
 	this(Match open_match, Match close_match) { 
 		_open_match = open_match;
 		_close_match = close_match;
@@ -197,18 +202,18 @@ public:
 		size_t current_position = open_match.end_position();
 		auto match_delimiter = search(input, regex_statement, current_position);
 		while (match_delimiter.found()) {
-			writeln("---current_position : ",current_position);
-			writeln("---current  delimiter: ",match_delimiter.str(0));
+			//writeln("---current_position : ",current_position);
+			//writeln("---current  delimiter: ",match_delimiter.str(0));
 			current_position = match_delimiter.end_position();
 			string inner = match_delimiter.str(1);
-			if (search(inner, regex_search).found() && level == 0) { writeln("-----level------",__LINE__);break; }
-			if (search(inner, regex_level_up).found()) { writeln("-----level------",__LINE__);level += 1; }
-			else if (search(inner, regex_level_down).found()) { writeln("-----level------",__LINE__);level -= 1; }
+			if (search(inner, regex_search).found() && level == 0) { break; }
+			if (search(inner, regex_level_up).found()) { level += 1; }
+			else if (search(inner, regex_level_down).found()) {level -= 1; }
 
-			if (level < 0) { return new MatchClosed(); }
+			if (level < 0) {writeln("-----level<0------",__LINE__); return new MatchClosed(); }
 			match_delimiter = search(input, regex_statement, current_position);
 		}
-		writeln("-----close match ---end pos---",match_delimiter.end_position());
+		//writeln("-----close match ---end pos---",match_delimiter.end_position(),"---level : ",level);
 		return new MatchClosed(open_match, match_delimiter);
 	}
 
