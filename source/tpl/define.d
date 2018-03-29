@@ -76,14 +76,17 @@ enum  Loop {
 	ForMapIn
 }
 
-// alias RgxObj = Regex!char;
+static this()
+{
+	regex_map_delimiters = [
+		Delimiter.Statement :  ("\\{\\%\\s*(.+?)\\s*\\%\\}"),
+		Delimiter.LineStatement: ("(?:^|\\n)## *(.+?) *(?:\\n|$)"),
+		Delimiter.Expression : ("\\{\\{\\s*(.+?)\\s*\\}\\}"),
+		Delimiter.Comment: ("\\{#\\s*(.*?)\\s*#\\}")
+	];
+}
 
-enum string[Delimiter] regex_map_delimiters = [
-    Delimiter.Statement :  ("\\{\\%\\s*(.+?)\\s*\\%\\}"),
-    Delimiter.LineStatement: ("(?:^|\\n)## *(.+?) *(?:\\n|$)"),
-    Delimiter.Expression : ("\\{\\{\\s*(.+?)\\s*\\}\\}"),
-    Delimiter.Comment: ("\\{#\\s*(.*?)\\s*#\\}")
-];
+__gshared string[Delimiter] regex_map_delimiters;
 
 enum string[Statement] regex_map_statement_openers = [
 	Statement.Loop : ("for (.+)"),
@@ -98,7 +101,7 @@ enum string[Statement] regex_map_statement_closers = [
 
 enum string[Loop] regex_map_loop = [
 	Loop.ForListIn : ("for (\\w+) in (.+)"),
-	Loop.ForMapIn : ("for (\\w+), (\\w+) in (.+)")
+	Loop.ForMapIn : ("for (\\w+),\\s*(\\w+) in (.+)")
 ];
 
 enum string[Condition] regex_map_condition = [
