@@ -1,0 +1,6 @@
+{% include "main.txt" %}
+## for addr in addrs 
+{{addr}} 
+## endfor
+
+{% include "main.txt" %}

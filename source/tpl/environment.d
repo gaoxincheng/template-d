@@ -131,9 +131,9 @@ public:
     }
 };
 
-@property Environment Env(string input = "./")
+@property Environment Env(string inpath = "./")
 {
-    return new Environment(input);
+    return new Environment(inpath);
 }
 
 @property Environment Env(string input, string ouput)

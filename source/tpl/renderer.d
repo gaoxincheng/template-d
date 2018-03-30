@@ -118,7 +118,7 @@ public:
     T eval_function(T = JSONValue)(ElementExpression element, ref JSONValue data)
     {
         T result;
-        writeln("------element.func---- :", element.func);
+        //writeln("------element.func---- :", element.func);
         switch (element.func)
         {
 
@@ -196,7 +196,7 @@ public:
         return T();
     }
 
-    string render(ASTNode temp, ref JSONValue data)
+    string render(ASTNode temp, JSONValue data)
     {
         string result = "";
         //writeln("------temp.parsed_node.children-----: ",temp.parsed_node.children.length);
@@ -237,6 +237,10 @@ public:
                         {
                             auto list = eval_expression(element_loop.list, data);
                             //writeln("----list ----: ", list);
+                            if(list.type != JSON_TYPE.ARRAY)
+                            {
+                                template_engine_throw("render_error", list.toString ~ " is not an array");
+                            }
                             foreach (size_t k, v; list)
                             {
                                 JSONValue data_loop = data;

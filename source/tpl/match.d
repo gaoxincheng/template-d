@@ -63,7 +63,7 @@ public:
 
 	bool found()
 	{
-		writeln("-----debug------", __LINE__);
+		//writeln("-----debug------", __LINE__);
 		return false;
 	}
 }
@@ -295,7 +295,7 @@ public:
 				MatchType!(T) mt = new MatchType!(T)(pos, v);
 				mt.setMatchResult(res);
 				mt.set_type(e);
-				writeln("--match pattern :", v, "   --->type : ", e);
+				//writeln("--match pattern :", v, "   --->type : ", e);
 				return mt;
 			}
 		}

@@ -3,9 +3,7 @@
 	"authors": [
 		"gaoxincheng"
 	],
-	"mainSourceFile": "./source/app.d",
 	"description": "A minimal D application.",
 	"copyright": "Copyright © 2018, gaoxincheng",
-	"license": "BSD",
-	"targetType": "executable"
+	"license": "BSD"
 }
