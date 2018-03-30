@@ -6,7 +6,7 @@ import std.path;
 import std.conv;
 import std.stdio;
 
-import tpl.define;
+import tpl.rule;
 import tpl.element;
 import tpl.match;
 import tpl.ast;
@@ -48,7 +48,7 @@ public:
                         break;
                     }
                 default:
-                    inja_throw("parser_error", "element notation: " ~ element_notation.stringof);
+                    template_engine_throw("parser_error", "element notation: " ~ element_notation.stringof);
                     break;
                 }
                 return result;
@@ -109,7 +109,7 @@ public:
                             auto match_command = RegexObj.match!Loop(loop_inner, regex_map_loop);
                             if (!match_command.found())
                             {
-                                inja_throw("parser_error", "unknown loop statement: " ~ loop_inner);
+                                template_engine_throw("parser_error", "unknown loop statement: " ~ loop_inner);
                             }
                             //writeln("#############match type :",match_command.type());
                             switch (match_command.type())
@@ -133,7 +133,7 @@ public:
                                     break;
                                 }
                             default:
-                                inja_throw("parser_error",
+                                template_engine_throw("parser_error",
                                         "unknown loop statement: " ~ match_command.str());
                                 break;
                             }
@@ -158,7 +158,7 @@ public:
                                         regex_map_condition);
                                 if (!match_command.found())
                                 {
-                                    inja_throw("parser_error",
+                                    template_engine_throw("parser_error",
                                             "unknown if statement: " ~ else_if_match._open_match.str());
                                 }
                                 condition_container.children ~= new ElementConditionBranch(else_if_match.inner(),
@@ -184,7 +184,7 @@ public:
                                         regex_map_condition);
                                 if (!match_command.found())
                                 {
-                                    inja_throw("parser_error",
+                                    template_engine_throw("parser_error",
                                             "unknown if statement: " ~ else_match._open_match.str());
                                 }
                                 //writeln("################### :",match_command.str(1),"   else match inner : ",else_match_inner);
@@ -200,7 +200,7 @@ public:
                             //MatchClosed last_if_match = RegexObj.search_closed_on_level(input, match_delimiter.pattern(), regex_map_statement_openers[Statement.Condition], regex_map_statement_closers[Statement.Condition], regex_map_statement_closers[Statement.Condition], condition_match);
                             if (!last_if_match.found())
                             {
-                                inja_throw("parser_error", "misordered if statement");
+                                template_engine_throw("parser_error", "misordered if statement");
                             }
 
                             string last_if_match_inner = last_if_match._open_match.str(1);
@@ -208,7 +208,7 @@ public:
                                     regex_map_condition);
                             if (!match_command.found())
                             {
-                                inja_throw("parser_error",
+                                template_engine_throw("parser_error",
                                         "unknown if statement: " ~ last_if_match._open_match.str());
                             }
                             if (match_command.type() == Condition.Else)
@@ -241,7 +241,7 @@ public:
                         }
                     default:
                         {
-                            inja_throw("parser_error",
+                            template_engine_throw("parser_error",
                                     "unknown  statement: " ~ to!string(match_statement.type()));
                             break;
                         }
@@ -260,7 +260,7 @@ public:
                 }
             default:
                 {
-                    inja_throw("parser_error",
+                    template_engine_throw("parser_error",
                             "unknown  statement: " ~ to!string(match_delimiter.type()));
                     break;
                 }
@@ -310,7 +310,8 @@ public:
     {
         string input = load_file(filename);
         string path = dirName(filename);
-        auto parsed = parse_tree(new Element(Type.Main, input), path);
+        //writeln("----template file path : ",path);
+        auto parsed = parse_tree(new Element(Type.Main, input), path ~ "/");
         return new ASTNode(parsed);
     }
 

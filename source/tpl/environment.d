@@ -5,7 +5,7 @@ import std.json;
 import std.file;
 
 import tpl.match;
-import tpl.define;
+import tpl.rule;
 import tpl.parser;
 import tpl.renderer;
 import tpl.util;
@@ -82,7 +82,7 @@ public:
         return renderer.render(parse(input), data);
     }
 
-    string render_template(ASTNode temp, JSONValue data)
+    string render(ASTNode temp, JSONValue data)
     {
         return renderer.render(temp, data);
     }

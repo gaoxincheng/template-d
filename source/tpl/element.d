@@ -3,7 +3,7 @@ module tpl.element;
 import std.string;
 import std.variant;
 import std.json;
-import tpl.define;
+import tpl.rule;
 
 class Element
 {

@@ -8,8 +8,9 @@ import std.variant;
 import std.json;
 import std.stdio;
 import std.uni;
+import std.functional;
 
-import tpl.define;
+import tpl.rule;
 import tpl.element;
 import tpl.match;
 import tpl.ast;
@@ -19,6 +20,69 @@ class Renderer
 public:
     this()
     {
+    }
+
+    bool execCmp(T)(T a, T b, Function func)
+    {
+        //writeln("--------exec cmp : ", func);
+        switch (func)
+        {
+        case Function.Equal:
+            {
+                return binaryFun!("a == b")(a, b);
+            }
+        case Function.Greater:
+            {
+                return binaryFun!("a > b")(a, b);
+            }
+        case Function.Less:
+            {
+                return binaryFun!("a < b")(a, b);
+            }
+        case Function.GreaterEqual:
+            {
+                return binaryFun!("a >= b")(a, b);
+            }
+        case Function.LessEqual:
+            {
+                return binaryFun!("a <= b")(a, b);
+            }
+        case Function.Different:
+            {
+                return binaryFun!("a != b")(a, b);
+            }
+        default:
+            {
+                return false;
+            }
+        }
+    }
+
+    bool cmp(JSONValue a, JSONValue b, Function func)
+    {
+        //writeln("--------cmp : ", func, " a type :", a.type);
+        if (a.type != b.type)
+            return false;
+        if (a.type == JSON_TYPE.OBJECT || a.type == JSON_TYPE.ARRAY)
+            return false;
+        else if (a.type == JSON_TYPE.STRING)
+        {
+            return execCmp!string(a.str, b.str, func);
+        }
+        else if (a.type == JSON_TYPE.INTEGER)
+        {
+            return execCmp!long(a.integer, b.integer, func);
+        }
+        else if (a.type == JSON_TYPE.TRUE)
+        {
+            return true;
+        }
+        else if (a.type == JSON_TYPE.FALSE)
+        {
+            return true;
+        }
+        else
+            return false;
     }
 
     bool eval(JSONValue j)
@@ -54,7 +118,7 @@ public:
     T eval_function(T = JSONValue)(ElementExpression element, ref JSONValue data)
     {
         T result;
-        //writeln("------element.func---- :", element.func);
+        writeln("------element.func---- :", element.func);
         switch (element.func)
         {
 
@@ -76,11 +140,22 @@ public:
                     result = toLower(res.toString);
                 return result;
             }
+        case Function.Equal:
+        case Function.Greater:
+        case Function.Less:
+        case Function.GreaterEqual:
+        case Function.LessEqual:
+        case Function.Different:
+            {
+                result = cmp(eval_expression(element.args[0], data),
+                        eval_expression(element.args[1], data), element.func);
+                return result;
+            }
         case Function.ReadJson:
             {
                 try
                 {
-                   // writeln("--read * json --:", element.command);
+                    // writeln("--read * json --:", element.command);
                     if (element.command.length > 0 && element.command in data)
                         result = data[element.command];
                     else
@@ -89,7 +164,7 @@ public:
                 }
                 catch (Exception e)
                 {
-                    inja_throw("render_error", "variable '" ~ element.command ~ "' not found");
+                    template_engine_throw("render_error", "variable '" ~ element.command ~ "' not found");
                 }
                 break;
             }
@@ -113,11 +188,11 @@ public:
             }
         default:
             {
-                inja_throw("render_error", "function '" ~ to!string(element.func) ~ "' not found");
+                template_engine_throw("render_error", "function '" ~ to!string(element.func) ~ "' not found");
             }
         }
 
-        inja_throw("render_error", "unknown function in renderer: " ~ element.command);
+        template_engine_throw("render_error", "unknown function in renderer: " ~ element.command);
         return T();
     }
 

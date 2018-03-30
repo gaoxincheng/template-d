@@ -1,7 +1,7 @@
 module tpl.util;
 
 import tpl.element;
-import tpl.define;
+import tpl.rule;
 import std.stdio;
 
 class Util

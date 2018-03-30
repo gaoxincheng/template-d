@@ -2,7 +2,7 @@ import std.stdio;
 import std.regex;
 import std.json;
 import tpl.match;
-import tpl.define;
+import tpl.rule;
 import tpl.parser;
 import tpl.renderer;
 import tpl.util;
@@ -54,8 +54,10 @@ void main()
 
 		JSONValue data;
 		data["name"] = "Peter";
+		data["alias"] = "Peter";
 		data["city"] = "Brunswick";
 		data["age"] = 29;
+		data["age1"] = 28;
 		data["names"] = ["Jeff", "Seb"];
 		data["is_happy"] = false;
 		data["allow"] = false;
@@ -72,15 +74,30 @@ void main()
 		// 								{{ city }}
 		// 							{% endif %}");
 		//string input = "hello {% for num in nums %}{{ index }} -- {{ num }} {% endfor %} gxc"; //test for in array
-		string input = "hello {% for k,  v in users %} {% if ok %}{{ k }} -- {{ v }} {% else %} {{ v }} -- {{ k }} {% endif %} {% endfor %} gxc";  //test for k,v in map
+		//string input = "hello {% for k,  v in users %} {% if ok %}{{ k }} -- {{ v }} {% else %} {{ v }} -- {{ k }} {% endif %} {% endfor %} gxc";  //test for k,v in map
 		//string input = "hi {{ upper(age) }}";
+		//string input = "{% if is_happy == ok %}true{% else %}false{% endif %}";
+		string input = "{% if is_happy %}
+							{{ name }}
+						{% else if ok %}
+							{{ gxc }}									
+						{% else %}
+							{% if allow %}
+								{{ city }}
+							{% else if ok %}
+								he he
+							{% else age %}
+								done
+							{% endif %}
+						{% endif %}";
 
-		//auto node = parser.parse(input);
 		//Util.debug_ast(node.parsed_node);
 		writeln("-------------------------------TEST ----------------------------");
 		writeln("input : ",input);
 		writeln("---------------------------Render result -----------------------");
-		auto result = Env().render(input, data);
+		auto ast = Env().parse(input);
+		Util.debug_ast(ast.parsed_node);
+		auto result = Env("./view/").render(ast, data);
 
 		writeln(result);
 	}

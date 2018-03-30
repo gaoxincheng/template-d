@@ -5,8 +5,9 @@ import std.string;
 import std.traits;
 import std.stdio;
 import std.conv;
+import std.algorithm.sorting;
 
-import tpl.define;
+import tpl.rule;
 
 class Match
 {
@@ -283,15 +284,18 @@ public:
 
 	static auto match(T)(string input, string[T] map, size_t pos = 0)
 	{
-		foreach (T e, string v; map)
+		auto keys = map.keys;
+		sort!("a < b")(keys);
+		foreach(e;keys)
 		{
+			auto v =map[e];
 			auto res = matchAll(pos > 0 ? input[pos .. $] : input, regex(v));
 			if (!res.empty)
 			{
 				MatchType!(T) mt = new MatchType!(T)(pos, v);
 				mt.setMatchResult(res);
 				mt.set_type(e);
-				//writeln("--match pattern :", v, "   --->type : ", e);
+				writeln("--match pattern :", v, "   --->type : ", e);
 				return mt;
 			}
 		}
