@@ -286,7 +286,6 @@ public:
                         //writeln("-----flg.type-------: ",flg.type);
                         if (element_branch.condition_type == Condition.Else || eval(flg))
                         {
-                            //writeln("dddddd");
                             result ~= render(new ASTNode(element_branch), data);
                             break;
                         }

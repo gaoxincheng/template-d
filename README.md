@@ -114,6 +114,6 @@ render("Hello {{ lower(neighbour) }}!", data); // "Hello peter!"
 ### Comments
 
 Comments can be written with the `{# ... #}` syntax.
-```c++
+```D
 render("Hello{# Todo #}!", data); // "Hello!"
 ```
