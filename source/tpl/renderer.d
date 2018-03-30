@@ -196,7 +196,7 @@ public:
         return T();
     }
 
-    string render(ASTNode temp, JSONValue data)
+    string render(ASTNode temp,ref JSONValue data)
     {
         string result = "";
         //writeln("------temp.parsed_node.children-----: ",temp.parsed_node.children.length);
@@ -243,7 +243,7 @@ public:
                             }
                             foreach (size_t k, v; list)
                             {
-                                JSONValue data_loop = data;
+                                JSONValue data_loop = parseJSON(data.toString);
                                 data_loop["index"] = k;
                                 data_loop[element_loop.value] = v;
                                 result ~= render(new ASTNode(element_loop), data_loop);
@@ -253,6 +253,11 @@ public:
                     case Loop.ForMapIn:
                         {
                             auto map = eval_expression(element_loop.list, data);
+                            writeln("----map type ----: ", map.type);
+                            if(map.type != JSON_TYPE.OBJECT)
+                            {
+                                template_engine_throw("render_error", map.toString ~ " is not an object");
+                            }
                             foreach (string k, v; map)
                             {
                                 JSONValue data_loop = data;

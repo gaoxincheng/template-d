@@ -68,20 +68,20 @@ void main()
 		data["users"] = ["name" : "jeck", "age" : "18"];
 
 		//string input = "hello {% for num in nums %}{{ index }} -- {{ num }} {% endfor %} gxc"; //test for in array
-		//string input = "hello {% for k,  v in users %} {% if ok %}{{ k }} -- {{ v }} {% else %} {{ v }} -- {{ k }} {% endif %} {% endfor %} gxc";  //test for k,v in map
+		string input = "hello {% for k,  v in users %} {% if ok %}{{ k }} -- {{ v }} {% else %} {{ v }} -- {{ k }} {% endif %} {% endfor %} gxc";  //test for k,v in map
 		//string input = "hi {{ upper(age) }}";
 		//string input = "{% if is_happy == ok %}true{% else %}false{% endif %}";
-		string input = "{% if is_happy %}
-							{{ name }}
-						{% else if ok %}
-							{{ gxc }}									
-						{% else %}
-							{% if allow %}
-								{{ city }}
-							{% else age %}
-								done
-							{% endif %}
-						{% endif %}";
+		// string input = "{% if is_happy %}
+		// 					{{ name }}
+		// 				{% else if ok %}
+		// 					{{ gxc }}									
+		// 				{% else %}
+		// 					{% if allow %}
+		// 						{{ city }}
+		// 					{% else age %}
+		// 						done
+		// 					{% endif %}
+		// 				{% endif %}";
 
 		//Util.debug_ast(node.parsed_node);
 		writeln("-------------------------------TEST ----------------------------");
@@ -89,41 +89,10 @@ void main()
 		writeln("---------------------------Render result -----------------------");
 		auto ast = Env().parse(input);
 		//Util.debug_ast(ast.parsed_node);
-		auto result = Env("./test/").render_file("index.txt", data);
+		auto result = Env("./test/").render(input, data);
 
 		writeln(result);
 	}
 
 }
 
-// if
-unittest
-{
-	JSONValue data;
-	data["name"] = "Peter";
-	data["alias"] = "Peter";
-	data["city"] = "Brunswick";
-	data["age"] = 29;
-	data["age1"] = 28;
-	data["names"] = ["Jeff", "Seb"];
-	data["is_happy"] = false;
-	data["allow"] = false;
-	data["ok"] = false;
-	data["gxc"] = "gao xin cheng";
-
-	data["nums"] = ["ni", " hao"];
-	data["users"] = ["name" : "jeck", "age" : "18"];
-	string input = "{% if is_happy %}
-						{{ name }}
-					{% else if ok %}
-						{{ gxc }}									
-					{% else %}
-						{% if allow %}
-							{{ city }}
-						{% else age %}
-							done
-						{% endif %}
-					{% endif %}";
-	auto result = Env("").render(input, data);
-	writeln(result);
-}
