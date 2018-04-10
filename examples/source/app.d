@@ -2,6 +2,7 @@ import std.stdio;
 import std.json;
 
 import tpl.environment;
+import tpl.util;
 
 
 void main()
@@ -17,12 +18,17 @@ void main()
 	data["allow"] = false;
 	data["users"] = ["name" : "jeck", "age" : "18"];
 
+	string input;
 	writeln("------------------IF--------------------------");
-	string input="{% if is_happy %}happy{% else %}unhappy{% endif %}";
+	input="{% if is_happy %}happy{% else %}unhappy{% endif %}";
 	writeln("result : ",Env().render(input, data));
 
 	writeln("------------------FOR-------------------------");
 	input = "{% for addr in addrs %}{{addr}} {% endfor %}";
+	writeln("result : ",Env().render(input, data));
+
+	writeln("------------------FOR2-------------------------");
+	input = "<ul>{% for addr in addrs %}<li><a href=\"{{ addr }}\">{{ addr }}</a></li>{% endfor %}</ul>";
 	writeln("result : ",Env().render(input, data));
 
 	writeln("------------------MAP-------------------------");
@@ -41,9 +47,17 @@ void main()
 	input = "{% if age >= age1 %}true{% else %}false{% endif %}";
 	writeln("result : ",Env().render(input, data));
 
+	writeln("-------------FUNC compare operator (string)------------");
+	input = "{% if name != \"Peter\" %}true{% else %}false{% endif %}";
+	writeln("result : ",Env().render(input, data));
+
+	//Util.debug_ast(Env().parse(input).parsed_node);
 	writeln("---------------Render file--------------------");
 	writeln("result : ",Env("./test/").render_file("main.txt", data));
 
 	writeln("---------Render file with `include`-----------");
 	writeln("result : ",Env("./test/").render_file("index.txt", data));
+
+	writeln("---------Render file with `include` & save to file-----------");
+	Env("./test/").write("index.txt", data,"index.html");
 }

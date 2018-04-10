@@ -59,7 +59,7 @@ public:
             {
                 auto elm = cast(ElementExpression)(e);
                 printSpace(level);
-                writeln("Type : Expression,  Function : ", elm.func, ", command :", elm.command);
+                writeln("Type : Expression,  Function : ", elm.func, ", command :", elm.command, ", result :", elm.result.toString);
                 printSpace(level);
                 writeln("       =====args begin=====");
                 foreach (child; elm.args)

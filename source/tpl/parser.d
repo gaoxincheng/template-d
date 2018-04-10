@@ -33,6 +33,12 @@ public:
             {
                 string command = match_function.str(1);
 
+				if ( (startsWith(command,'"') && endsWith(command,'"')) || (startsWith(command,'\'') && endsWith(command,'\'')) ) { //  Result
+					ElementExpression result = new ElementExpression(Function.Result);
+					result.result = command[1..$-1];
+					return result;
+				}
+
                 ElementExpression result = new ElementExpression(Function.ReadJson);
                 switch (element_notation)
                 {

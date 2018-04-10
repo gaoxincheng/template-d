@@ -1,6 +1,6 @@
 {% include "main.txt" %}
-## for addr in addrs 
-{{addr}} 
-## endfor
+{% for key, value in users %}
+    <p><strong>{{ key }}</strong>: {{ value }}</p>
+{% endfor %}
 
 {% include "main.txt" %}

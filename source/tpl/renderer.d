@@ -155,7 +155,7 @@ public:
             {
                 try
                 {
-                    // writeln("--read * json --:", element.command);
+                    //writeln("--read * json --:", element.command);
                     if (element.command.length > 0 && element.command in data)
                         result = data[element.command];
                     else
@@ -253,7 +253,7 @@ public:
                     case Loop.ForMapIn:
                         {
                             auto map = eval_expression(element_loop.list, data);
-                            writeln("----map type ----: ", map.type);
+                            writeln("----Loop type ----: ", map.type);
                             if(map.type != JSON_TYPE.OBJECT)
                             {
                                 template_engine_throw("render_error", map.toString ~ " is not an object");

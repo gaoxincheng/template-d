@@ -98,27 +98,23 @@ public:
         return render_file(filename, data);
     }
 
-    // void write(const std::string& filename, const json& data, const std::string& filename_out) {
-    // 	std::ofstream file(output_path + filename_out);
-    // 	file << render_file(filename, data);
-    // 	file.close();
-    // }
+    void write(string filename, JSONValue data, string filename_out) {
+        std.file.write(output_path ~ filename_out,render_file(filename,data));
+    }
 
-    // void write(const Template& temp, const json& data, const std::string& filename_out) {
-    // 	std::ofstream file(output_path + filename_out);
-    // 	file << render_template(temp, data);
-    // 	file.close();
-    // }
+    void write(ASTNode temp, JSONValue data, string filename_out) {
+    	std.file.write(output_path ~ filename_out,render(temp,data));
+    }
 
-    // void write_with_json_file(const std::string& filename, const std::string& filename_data, const std::string& filename_out) {
-    // 	json data = load_json(filename_data);
-    // 	write(filename, data, filename_out);
-    // }
+    void write_with_json_file(string filename, string filename_data, string filename_out) {
+    	auto data = load_json(filename_data);
+    	write(filename, data, filename_out);
+    }
 
-    // void write_with_json_file(const Template& temp, const std::string& filename_data, const std::string& filename_out) {
-    // 	json data = load_json(filename_data);
-    // 	write(temp, data, filename_out);
-    // }
+    void write_with_json_file(ASTNode temp, string filename_data, string filename_out) {
+    	auto data = load_json(filename_data);
+    	write(temp, data, filename_out);
+    }
 
     string load_global_file(string filename)
     {
