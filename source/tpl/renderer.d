@@ -159,7 +159,19 @@ public:
                     if (element.command.length > 0 && element.command in data)
                         result = data[element.command];
                     else
-                        result = element.command;
+                    {
+                        auto cmds = split(element.command,".");
+                        if(cmds.length > 1)
+                        {
+                            if(cmds.length == 2)
+                            {
+                                if(cmds[0] in data && cmds[1] in data[cmds[0]])
+                                    result = data[cmds[0]][cmds[1]];
+                            }                               
+                        }
+                        else
+                            result = element.command;
+                    }
                     return result;
                 }
                 catch (Exception e)
@@ -243,6 +255,7 @@ public:
                             }
                             foreach (size_t k, v; list)
                             {
+                                //writeln("v.type : ",v.type, " v.tostring :",v.toString);
                                 JSONValue data_loop = parseJSON(data.toString);
                                 data_loop["index"] = k;
                                 data_loop[element_loop.value] = v;

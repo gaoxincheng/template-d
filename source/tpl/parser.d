@@ -211,6 +211,7 @@ public:
                             //MatchClosed last_if_match = RegexObj.search_closed_on_level(input, match_delimiter.pattern(), regex_map_statement_openers[Statement.Condition], regex_map_statement_closers[Statement.Condition], regex_map_statement_closers[Statement.Condition], condition_match);
                             if (!last_if_match.found())
                             {
+                                writeln("--####- - : ",delimiter_inner);
                                 template_engine_throw("parser_error", "misordered if statement");
                             }
 
