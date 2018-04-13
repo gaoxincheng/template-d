@@ -253,7 +253,7 @@ public:
                     case Loop.ForMapIn:
                         {
                             auto map = eval_expression(element_loop.list, data);
-                            writeln("----Loop type ----: ", map.type);
+                            //writeln("----Loop type ----: ", map.type);
                             if(map.type != JSON_TYPE.OBJECT)
                             {
                                 template_engine_throw("render_error", map.toString ~ " is not an object");

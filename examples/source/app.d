@@ -4,13 +4,12 @@ import std.json;
 import tpl.environment;
 import tpl.util;
 
-
 void main()
 {
 	JSONValue data;
-	data["name"] = "Peter";
-	data["alias"] = "Peter";
-	data["city"] = "Brunswick";
+	data["name"] = "Cree";
+	data["alias"] = "Cree";
+	data["city"] = "Christchurch";
 	data["age"] = 29;
 	data["age1"] = 28;
 	data["addrs"] = ["ShangHai", "BeiJing"];
@@ -52,11 +51,12 @@ void main()
 	writeln("result : ",Env().render(input, data));
 
 	//Util.debug_ast(Env().parse(input).parsed_node);
-	writeln("---------------Render file--------------------");
-	writeln("result : ",Env("./test/").render_file("main.txt", data));
 
 	writeln("---------Render file with `include`-----------");
-	writeln("result : ",Env("./test/").render_file("index.txt", data));
+	writeln("result : ", Env("./test/").render_file("index.txt", data));
+
+	writeln("---------------Render file--------------------");
+	writeln("result : ", Env("./test/").render_file("main.txt", data));
 
 	writeln("---------Render file with `include` & save to file-----------");
 	Env("./test/").write("index.txt", data,"index.html");

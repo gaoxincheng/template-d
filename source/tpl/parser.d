@@ -11,6 +11,7 @@ import tpl.element;
 import tpl.match;
 import tpl.ast;
 import tpl.util;
+import tpl.cache;
 
 class Parser
 {
@@ -33,11 +34,13 @@ public:
             {
                 string command = match_function.str(1);
 
-				if ( (startsWith(command,'"') && endsWith(command,'"')) || (startsWith(command,'\'') && endsWith(command,'\'')) ) { //  Result
-					ElementExpression result = new ElementExpression(Function.Result);
-					result.result = command[1..$-1];
-					return result;
-				}
+                if ((startsWith(command, '"') && endsWith(command, '"'))
+                        || (startsWith(command, '\'') && endsWith(command, '\'')))
+                { //  Result
+                    ElementExpression result = new ElementExpression(Function.Result);
+                    result.result = command[1 .. $ - 1];
+                    return result;
+                }
 
                 ElementExpression result = new ElementExpression(Function.ReadJson);
                 switch (element_notation)
@@ -54,7 +57,8 @@ public:
                         break;
                     }
                 default:
-                    template_engine_throw("parser_error", "element notation: " ~ element_notation.stringof);
+                    template_engine_throw("parser_error",
+                            "element notation: " ~ element_notation.stringof);
                     break;
                 }
                 return result;
@@ -115,7 +119,8 @@ public:
                             auto match_command = RegexObj.match!Loop(loop_inner, regex_map_loop);
                             if (!match_command.found())
                             {
-                                template_engine_throw("parser_error", "unknown loop statement: " ~ loop_inner);
+                                template_engine_throw("parser_error",
+                                        "unknown loop statement: " ~ loop_inner);
                             }
                             //writeln("#############match type :",match_command.type());
                             switch (match_command.type())
@@ -314,11 +319,17 @@ public:
 
     ASTNode parse_template(string filename)
     {
+        auto node = ASTCache.node(filename);
+        if (node !is null)
+            return node;
+
         string input = load_file(filename);
         string path = dirName(filename);
-        //writeln("----template file path : ",path);
+        //writeln("----template file path : ",filename);
         auto parsed = parse_tree(new Element(Type.Main, input), path ~ "/");
-        return new ASTNode(parsed);
+        auto astnode = new ASTNode(parsed);
+        ASTCache.add(filename, astnode);
+        return astnode;
     }
 
     string load_file(string filename)
