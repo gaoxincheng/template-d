@@ -88,7 +88,7 @@ public:
                 writeln("       ElementExpression begin ");
                 debug_ast(elm.list);
                 printSpace(level);
-                writeln("       ElementExpression begin ");
+                writeln("       ElementExpression end ");
                 printSpace(level);
                 writeln("       +++++++children begin ");
                 foreach (child; elm.children)
@@ -102,7 +102,7 @@ public:
         case Type.Main:
             {
                 printSpace(level);
-                writeln("---------TREE-----------");
+                writeln("----------AST TREE DEBUG-----------");
                 foreach (child; e.children)
                 {
                     debug_ast(child);

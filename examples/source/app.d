@@ -27,7 +27,7 @@ void main()
 	userinfo ~= user2;
 	data["userinfo"] = userinfo;
 
-	//string input;
+	string input;
 	// writeln("------------------IF--------------------------");
 	// input="{% if is_happy %}happy{% else %}unhappy{% endif %}";
 	// writeln("result : ",Env().render(input, data));
@@ -76,21 +76,25 @@ void main()
 	// input = "{% for user in userinfo %}{{ user.name }} : {{user.age}}  {% endfor %}";
 	// writeln("result : ",Env().render(input, data));
 
-	//Util.debug_ast(Env().parse(input).parsed_node);
+	writeln("-------------FUNC  operator------------");
+	input = "{{ age + age1 }}";
+	writeln("result : ",Env().render(input, data));
 
-	JSONValue d;
-	d["appname"] = "Vitis";
-	d["title"] = "this is test .";
-	d["content"] = "Vitis is IM .";
-	d["platform"] = "Android";
-	d["pushscope"] = "IOS";
-	d["type"] = "online";
-	d["count"] = 100;
-	d["time"] = "Fri Apr 13 17:36:13 CST 2018";
-	d["savetotime"] = "Fri Apr 13 17:36:13 CST 2018";
-	d["msgid"] = 1000;
-	d["userinfo"] = userinfo;
+	Util.debug_ast(Env().parse(input).parsed_node);
 
-	writeln("---------Render file  & save to file-----------");
-	Env("./test/").write("detail.txt", d,"detail.html");
+	// JSONValue d;
+	// d["appname"] = "Vitis";
+	// d["title"] = "this is test .";
+	// d["content"] = "Vitis is IM .";
+	// d["platform"] = "Android";
+	// d["pushscope"] = "IOS";
+	// d["type"] = "online";
+	// d["count"] = 100;
+	// d["time"] = "Fri Apr 13 17:36:13 CST 2018";
+	// d["savetotime"] = "Fri Apr 13 17:36:13 CST 2018";
+	// d["msgid"] = 1000;
+	// d["userinfo"] = userinfo;
+
+	// writeln("---------Render file  & save to file-----------");
+	// Env("./test/").write("detail.txt", d,"detail.html");
 }
