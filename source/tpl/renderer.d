@@ -14,6 +14,7 @@ import tpl.rule;
 import tpl.element;
 import tpl.match;
 import tpl.ast;
+import tpl.util;
 
 class Renderer
 {
@@ -165,8 +166,18 @@ public:
                         {
                             if(cmds.length == 2)
                             {
-                                if(cmds[0] in data && cmds[1] in data[cmds[0]])
-                                    result = data[cmds[0]][cmds[1]];
+                                if(cmds[0] in data)
+                                {
+                                    if(Util.is_num(cmds[1]))
+                                    {
+                                        auto idx = to!int(cmds[1]);
+                                        
+                                        result = data[cmds[0]][idx];
+                                    }
+                                    else if(cmds[1] in data[cmds[0]])
+                                        result = data[cmds[0]][cmds[1]];
+                                }
+                                    
                             }                               
                         }
                         else

@@ -76,11 +76,15 @@ void main()
 	// input = "{% for user in userinfo %}{{ user.name }} : {{user.age}}  {% endfor %}";
 	// writeln("result : ",Env().render(input, data));
 
-	writeln("-------------FUNC  operator------------");
-	input = "{{ 'a' <= '1' }}";
+	// writeln("-------------FUNC  operator------------");
+	// input = "{{ 'a' <= '1' }}";
+	// writeln("result : ",Env().render(input, data));
+
+	writeln("-------------Array value------------");
+	input = "{{ addrs.0 }}";
 	writeln("result : ",Env().render(input, data));
 
-	Util.debug_ast(Env().parse(input).parsed_node);
+	//Util.debug_ast(Env().parse(input).parsed_node);
 
 	// JSONValue d;
 	// d["appname"] = "Vitis";

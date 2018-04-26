@@ -3,6 +3,7 @@ module tpl.util;
 import tpl.element;
 import tpl.rule;
 import std.stdio;
+import std.regex;
 
 class Util
 {
@@ -129,5 +130,11 @@ public:
     {
         for (size_t i = 0; i < num; i++)
             write("       ");
+    }
+
+    static bool is_num(string str)
+    {
+        auto m = match(str,regex(`^[0-9]\d*$`));
+        return !m.empty;
     }
 }
