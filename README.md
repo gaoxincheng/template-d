@@ -66,6 +66,8 @@ data["time"]["start"] = 16;
 data["time"]["end"] = 22;
 
 render("{{ neighbour }}", data); // "Peter"
+render("{{ guests.1 }}", data); // "Tom"
+render("{{ time.start }}", data); // 16
 ```
 
 ### Statements

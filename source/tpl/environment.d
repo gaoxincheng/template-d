@@ -22,7 +22,7 @@ class Environment
 public:
     this()
     {
-        input_path = output_path = "./";
+        input_path = output_path = "./views/";
         parser = new Parser();
         renderer = new Renderer();
     }
@@ -127,7 +127,7 @@ public:
     }
 };
 
-@property Environment Env(string inpath = "./")
+@property Environment Env(string inpath = "./views/")
 {
     return new Environment(inpath);
 }

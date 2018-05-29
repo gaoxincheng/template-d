@@ -10,89 +10,120 @@ import tpl.environment;
 
 void main()
 {
+	JSONValue data;
+	data["name"] = "Cree";
+	data["alias"] = "Cree";
+	data["city"] = "Christchurch";
+	data["age"] = 3;
+	data["age1"] = 28;
+	data["addrs"] = ["ShangHai", "BeiJing"];
+	data["is_happy"] = false;
+	data["allow"] = false;
+	data["users"] = ["name" : "jeck", "age" : "18"];
+	data["nums"] = [3,5,2,1];
+	
+	JSONValue user1;
+	user1["name"] = "cree";
+	user1["age"] = 2;
+	user1["hobby"] = ["eat", "drink"];
+	JSONValue user2;
+	user2["name"] = "jeck";
+	user2["age"] = 28;
+	user2["hobby"] = ["sing", "football"];
+	JSONValue[] userinfo;
+	userinfo ~= user1;
+	userinfo ~= user2;
+	JSONValue data2;
+	data2["userinfo"] = userinfo;
 
-	if (0)
-	{
-		writeln("-----begin----------");
-		string input = "
-				<div>ha</div>
-				{# this is Comment#}
-				you 
-				<div>
-				{% if a in [a,b] %}
-					hello
-				{% endif %}
-				</div>
-				{% for x in xarray %}
-				{{x}}
-				{% endfor %}";
+	string input;
+	writeln("------------------IF--------------------------");
+	input="{% if is_happy %}happy{% else %}unhappy{% endif %}";
+	writeln("result : ",Env.render(input, data));
 
-		writeln("-------------search first----------------");
+	writeln("------------------FOR-------------------------");
+	input = "{% for addr in addrs %}{{addr}} {% endfor %}";
+	writeln("result : ",Env.render(input, data));
 
-		string test = "gxc {% for x in xarray %} make {{x}} flag {% endfor %} hello";
-		auto matRs = RegexObj.search_all(test);
-		writeln("pattern : ", matRs.pattern);
-		writeln("empty : ", matRs.empty);
-		writeln("size : ", matRs.size);
-		writeln("position  : ", matRs.position);
-		writeln("end position  : ", matRs.end_position);
-		writeln("type : ", matRs.type);
-		writeln("pre ", matRs.match.pre);
-		writeln("post ", matRs.match.post);
-		writeln("hit ", matRs.match.hit);
-		writeln("whichPattern :", matRs.match.front.whichPattern);
+	writeln("------------------FOR2-------------------------");
+	input = "<ul>{% for addr in addrs %}<li><a href=\"{{ addr }}\">{{ addr }}</a></li>{% endfor %}</ul>";
+	writeln("result : ",Env.render(input, data));
 
-		writeln("-------------next first----------------");
-		auto loop_match = RegexObj.search_closed(test, matRs.pattern(),
-				regex_map_statement_openers[Statement.Loop],
-				regex_map_statement_closers[Statement.Loop], matRs);
-		writeln("inner :", loop_match.inner());
-		writeln("outer :", loop_match.outer());
-	}
-	else
-	{
+	writeln("------------------MAP-------------------------");
+	input = "{% for k,v in users %}{{ k }} -- {{ v }}  {% endfor %}";
+	writeln("result : ",Env.render(input, data));
 
-		JSONValue data;
-		data["name"] = "Peter";
-		data["alias"] = "Peter";
-		data["city"] = "Brunswick";
-		data["age"] = 29;
-		data["age1"] = 28;
-		data["names"] = ["Jeff", "Seb"];
-		data["is_happy"] = false;
-		data["allow"] = false;
-		data["ok"] = false;
-		data["gxc"] = "gao xin cheng";
+	writeln("------------------FUNC upper------------------");
+	input = "{{ upper(city) }}";
+	writeln("result : ",Env.render(input, data));
 
-		data["nums"] = ["ni", " hao"];
-		data["users"] = ["name" : "jeck", "age" : "18"];
+	writeln("----------------FUNC lower--------------------");
+	input = "{{ lower(city) }}";
+	writeln("result : ",Env.render(input, data));
 
-		//string input = "hello {% for num in nums %}{{ index }} -- {{ num }} {% endfor %} gxc"; //test for in array
-		string input = "hello {% for k,  v in users %} {% if ok %}{{ k }} -- {{ v }} {% else %} {{ v }} -- {{ k }} {% endif %} {% endfor %} gxc";  //test for k,v in map
-		//string input = "hi {{ upper(age) }}";
-		//string input = "{% if is_happy == ok %}true{% else %}false{% endif %}";
-		// string input = "{% if is_happy %}
-		// 					{{ name }}
-		// 				{% else if ok %}
-		// 					{{ gxc }}									
-		// 				{% else %}
-		// 					{% if allow %}
-		// 						{{ city }}
-		// 					{% else age %}
-		// 						done
-		// 					{% endif %}
-		// 				{% endif %}";
+	writeln("-------------FUNC compare operator------------");
+	input = "{% if length(addrs)>=4 %}true{% else %}false{% endif %}";
+	writeln("result : ",Env.render(input, data));
 
-		//Util.debug_ast(node.parsed_node);
-		writeln("-------------------------------TEST ----------------------------");
-		writeln("input : ", input);
-		writeln("---------------------------Render result -----------------------");
-		auto ast = Env().parse(input);
-		//Util.debug_ast(ast.parsed_node);
-		auto result = Env("./test/").render(input, data);
+	writeln("-------------FUNC compare operator (string)------------");
+	input = "{% if name != \"Peter\" %}true{% else %}false{% endif %}";
+	writeln("result : ",Env.render(input, data));
 
-		writeln(result);
-	}
+	writeln("---------Render file with `include`-----------");
+	writeln("result : ", Env.render_file("index.txt", data));
+
+	writeln("---------------Render file--------------------");
+	writeln("result : ", Env.render_file("main.txt", data));
+
+	writeln("---------Render file with `include` & save to file-----------");
+	Env.write("index.txt", data,"index.html");
+
+
+	writeln("------------------Deep for-------------------------");
+	input = "{% for user in userinfo %}{{user.hobby.1}} {% endfor %}";
+	writeln("result : ",Env.render(input, data2));
+
+	writeln("------------------Deep for 2-------------------------");
+	input = "{{userinfo.1.name}}";
+	writeln("result : ",Env.render(input, data2));
+
+	writeln("------------------Deep for-------------------------");
+	input = "{% for user in userinfo %}{% for h in user.hobby %} {{ h }} {% endfor %}{% endfor %}";
+	writeln("result : ",Env.render(input, data2));
+
+	writeln("-------------FUNC  operator------------");
+	input = "{{ 'a' <= '1' }} ~ {{ age >= age1 }} ~ {{ 2 < 1 }} ~ {{ 4 > 3 }} ~ {{ '4' > 3 }}";
+	writeln("result : ",Env.render(input, data));
+
+	writeln("-------------Array value------------");
+	input = "{{ addrs.0 }} or {{ users.name }}";
+	writeln("result : ",Env.render(input, data));
+
+	 writeln("-------------FUNC length------------");
+	 input = "{{ length(name) }} or {{ length(users) }}";
+	 writeln("result : ",Env.render(input, data));
+
+	//Util.debug_ast(Env.parse(input).parsed_node);
+
+	JSONValue d;
+	d["appname"] = "Vitis";
+	d["title"] = "this is test .";
+	d["content"] = "Vitis is IM .";
+	d["platform"] = "Android";
+	d["pushscope"] = "IOS";
+	d["type"] = "online";
+	d["count"] = 100;
+	d["time"] = "Fri Apr 13 17:36:13 CST 2018";
+	d["savetotime"] = "Fri Apr 13 17:36:13 CST 2018";
+	d["msgid"] = 1000;
+	d["userinfo"] = userinfo;
+
+	writeln("---------Render file  & save to file-----------");
+	Env.write("detail.txt", d,"detail.html");
+
+	writeln("------------------FUNCTION range-------------------------");
+	input = "{% for id in range(1,4) %}{{id}} {% endfor %}";
+	writeln("result : ",Env.render(input, data));
 
 }
 
